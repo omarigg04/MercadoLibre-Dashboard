@@ -8,18 +8,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { AgGridModule } from 'ag-grid-angular';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { DatePipe } from '@angular/common';
+import { AgChartsAngularModule } from 'ag-charts-angular';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    NavBarComponent
+    NavBarComponent,
+    BarChartComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    AgGridModule
+    AgGridModule,
+    AgChartsAngularModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
