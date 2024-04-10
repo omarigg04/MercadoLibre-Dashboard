@@ -1,0 +1,13 @@
+<div class="main-box">
+    <ag-grid-angular
+      style="width: 85%; height: 720px;"
+      class="ag-theme-alpine"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="100"
+      [animateRows]="true"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
