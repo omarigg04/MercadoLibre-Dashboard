@@ -1,24 +1,90 @@
-.main-box{
-    height: 800px; 
-    width: 100%; 
-    display:flex;  
-    align-items: center;
-    justify-content: center;
+h3, p{
+  margin: 0;
 }
 
-.mat-mdc-icon-button svg {
-    color: rgb(62, 62, 62);
+/* Contenedor principal para datepicker y summary boxes */
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  height: auto; /* Permite que el contenedor crezca con el contenido */
 }
 
-.summary-boxes {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
+/* Formulario del datepicker */
+.date-picker-form {
+  display: flex;
+  align-items: center; /* Alinea el contenido del formulario verticalmente */
+  flex-grow: 1;
+  margin-right: 20px; /* Ajusta espaciado entre formulario y summary boxes */
+}
+
+/* Estilos para los elementos del formulario como inputs y botones */
+button, input {
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 0.5rem; /* Ajuste para alinear con los demás elementos */
+}
+
+button {
+  background-color: #3c6400;
+  color: white;
+  border: none;
+  height: auto; /* Permite que el botón crezca según el contenido */
+  align-self: center; /* Esto centra el botón si es más pequeño que los elementos circundantes */
+  margin-left: 1rem;
+  position: relative;
+  bottom: .5rem;
+}
+
+/* Summary boxes */
+.summary-box {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 10px;
+  justify-content: center; /* Centra el contenido de los summary box horizontalmente */
+  padding: 0.5rem 1rem; /* Ajuste de padding para estética y alineación */
+  flex: 1; /* Crecimiento flexible para ocupar el espacio disponible */
+  min-width: 150px; /* Asegura un ancho mínimo */
+}
+
+@media (max-width: 768px) {
   .summary-box {
-    text-align: center;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-basis: 100%; /* Cada box ocupa el 100% del ancho de su contenedor en pantallas pequeñas */
+    margin-bottom: 10px; /* Añade espacio entre boxes en pantallas pequeñas */
   }
-  
+}
+
+/* Estilos generales de los mat-card */
+mat-card {
+  background-color: #e9e9e9;
+  margin-bottom: 20px;
+  overflow: visible;
+  padding: 0.3rem;
+}
+
+/* Contenido de los mat-card */
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+
+mat-card-content.summary {
+  height: 8rem;
+}
+
+.chart-container {
+  position: relative; /* Contenedor relativo para el posicionamiento del spinner */
+  height: 650px; /* La altura debe coincidir con la de tu gráfico para alinear correctamente */
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
+}
+
+.spinner {
+  position: absolute; /* Posicionamiento absoluto para el spinner */
+
+}

@@ -1,39 +1,66 @@
+<mat-card>
+  <mat-card-content class="summary">
+    <!-- Container for datepicker and summary boxes -->
+    <div class="controls-container">
+      <form [formGroup]="dateRangeForm" class="date-picker-form picker-box">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a date range</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate formControlName="start" placeholder="Start date">
+            <input matEndDate formControlName="end" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <button mat-button (click)="applyFilter()">Apply Filter</button>
+      </form>
 
+      <div class="summary-box">
+        <mat-spinner *ngIf="totalSumIsLoading" diameter="45"></mat-spinner>
+        <div *ngIf="!totalSumIsLoading">
+        <h3>Total Sum</h3>
+        <p>{{ totalSum | currency:'MXN'}}</p>
+      </div>
+      </div>
+      <div class="summary-box">
+        <mat-spinner *ngIf="enviosIsLoading" diameter="45"></mat-spinner>
+        <div *ngIf="!enviosIsLoading">
+        <h3>Shipping</h3>
+        <p>{{ envios | currency:'MXN'}}</p>
+      </div>
+      </div>
+      <div class="summary-box">
+        <mat-spinner *ngIf="feesIsLoading" diameter="45"></mat-spinner>
+        <div *ngIf="!feesIsLoading">
+        <h3>Fees</h3>
+        <p>{{ fees | currency:'MXN'}}</p>
+      </div>
+      </div>
+      <div class="summary-box">
+        <h3>Other Sum 2</h3>
+        <p></p>
+      </div>
+      <div class="summary-box">
+        <h3>Other Sum 2</h3>
+        <p></p>
+      </div>
+      <div class="summary-box">
+        <h3>Other Sum 2</h3>
+        <p></p>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
 
-
-<div class="summary-boxes">
-
-  <form [formGroup]="dateRangeForm">
-    <mat-form-field appearance="fill">
-      <mat-label>Choose a date range</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date">
-        <input matEndDate formControlName="end" placeholder="End date">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-  
-    <button (click)="applyFilter()">Apply Filter</button>
-  </form>
-
-  <div class="summary-box">
-    <h3>Total Sum</h3>
-    <!-- Usando MXN como moneda -->
-    <p>{{ totalSum | currency:'MXN'}}</p>
-  </div>
-  <div class="summary-box">
-    <h3>Envios</h3>
-    <p>{{ envios | currency:'MXN'}}</p>
-  </div>
-  <div class="summary-box">
-    <h3>Other Sum 2</h3>
-    <p>{{ fees | currency:'MXN':'symbol':'1.0-2':'es-MX' }}</p>
-  </div>
-</div>
-
-
-<ag-charts-angular
-  style="height: 700px; width: 1500px;"
-  [options]="options">
-</ag-charts-angular>
+<mat-card>
+  <mat-card-content>
+    <!-- Contenedor para el spinner y el chart -->
+    <div class="chart-container">
+      <!-- Spinner -->
+      <mat-spinner *ngIf="isLoading" class="spinner"></mat-spinner>
+      <!-- Chart -->
+      <ag-charts-angular *ngIf="!isLoading" style="height: 650px; width: 100%;" [options]="options"></ag-charts-angular>
+    </div>
+    <!-- ... resto de tu contenido ... -->
+  </mat-card-content>
+</mat-card>
