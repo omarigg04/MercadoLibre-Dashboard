@@ -3,6 +3,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { GridOptions, RowModelType } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { Order } from '../interfaces/Order.interface';
+import { ValueFormatterParams } from 'ag-grid-community';
+
 
 
 @Component({
@@ -39,10 +41,12 @@ export class DashboardComponent implements OnInit {
       {
         headerName: 'Created',
         field: 'date_created',
+        filter: "agDateColumnFilter",
         sortable: true,
-        filter: true,
         editable: true,
-      },
+        // Usa valueFormatter para mostrar la fecha en el formato deseado
+        valueFormatter: (params:ValueFormatterParams) => this.datePipe.transform(params.value, 'dd/MM/yyyy, HH:mm'),
+      },      
       {
         headerName: 'Header Product',
         field: 'item',
@@ -53,7 +57,7 @@ export class DashboardComponent implements OnInit {
       },
       {
         headerName: 'Raw Total',
-        field: 'paid_amount',
+        field: 'total_amount',
         sortable: true,
         filter: true,
         editable: true,
@@ -87,24 +91,29 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.http.get<Order[]>('http://localhost:3000/api/orders').subscribe(
       (response: Order[]) => {
-        this.rowData = response.map(order => ({
+        // Primero, filtramos los pedidos para quedarnos solo con aquellos cumplidos
+        const fulfilledOrders = response.filter(order => order.fulfilled);
+  
+        // Luego, mapeamos esos pedidos a la estructura deseada
+        this.rowData = fulfilledOrders.map(order => ({
           id: order.id,
-          date_created: this.datePipe.transform(order.date_created, 'dd/MM/yyyy, HH:mm'),
-          paid_amount: order.paid_amount,
+          // Ajustamos date_created para que la hora sea medianoche
+          date_created: new Date(new Date(order.date_created).setHours(0, 0, 0, 0)),
+          total_amount: order.total_amount,
           sale_fee: order.order_items[0].sale_fee,
           item: order.order_items[0].item.title,
-          sat_fee: order.paid_amount * 0.01 + order.paid_amount * 0.08
-      
-          // Aquí puedes asignar otras propiedades de la orden según sea necesario
+          sat_fee: order.total_amount * 0.01 + order.total_amount * 0.08
         }));
-
-        console.log(response); // Esto imprimirá todas las órdenes en la consola
+        console.log(fulfilledOrders); // Esto imprimirá todas las órdenes cumplidas en la consola
       },
       (error) => {
         console.error('Error al obtener pedidos:', error);
       }
     );
   }
+  
+  
+  
 
   formatCurrency(params: any) {
     return `$${params.value.toFixed(2)}`;

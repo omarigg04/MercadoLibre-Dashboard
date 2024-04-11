@@ -9,3 +9,16 @@
 .mat-mdc-icon-button svg {
     color: rgb(62, 62, 62);
 }
+
+.summary-boxes {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .summary-box {
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
