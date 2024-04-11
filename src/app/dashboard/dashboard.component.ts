@@ -3,8 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { GridOptions, RowModelType } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { Order } from '../interfaces/Order.interface';
-import { AgChartsAngular } from "ag-charts-angular";
-import { AgChartOptions, AgCharts } from "ag-charts-community";
+
 
 @Component({
   selector: 'app-dashboard',

@@ -1,95 +1,72 @@
 
-  import { Component } from '@angular/core';
-
-    @Component({
-        selector: 'app-bar-chart',
-        templateUrl: './bar-chart.component.html',
-        styleUrls: ['./bar-chart.component.scss']
-      })
-      export class BarChartComponent {
-      
-  public options: any;
 
 
-  getData() {
-    return [
-      {
-        quarter: "Q1'18",
-        iphone: 140,
-        mac: 16,
-        ipad: 14,
-        wearables: 12,
-        services: 20,
-      },
-      {
-        quarter: "Q2'18",
-        iphone: 124,
-        mac: 20,
-        ipad: 14,
-        wearables: 12,
-        services: 30,
-      },
-      {
-        quarter: "Q3'18",
-        iphone: 112,
-        mac: 20,
-        ipad: 18,
-        wearables: 14,
-        services: 36,
-      },
-      {
-        quarter: "Q4'18",
-        iphone: 118,
-        mac: 24,
-        ipad: 14,
-        wearables: 14,
-        services: 36,
-      },
-    ];
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Order } from '../interfaces/Order.interface';
+
+@Component({
+  selector: 'app-bar-chart',
+  templateUrl: './bar-chart.component.html',
+  styleUrls: ['./bar-chart.component.scss'],
+})
+export class BarChartComponent implements OnInit {
+  public options: any = {};
+  public chartData: any[] = [];
+  public filteredChartData: any[] = [];
+  dateRangeForm: FormGroup;
+
+  constructor(private http: HttpClient) {
+    // Inicializar el FormGroup para el rango de fechas
+    this.dateRangeForm = new FormGroup({
+      start: new FormControl(),
+      end: new FormControl()
+    });
   }
 
+  ngOnInit(): void {
+    this.http.get<Order[]>('http://localhost:3000/api/orders').subscribe(
+      (response: Order[]) => {
+        response.forEach(order => {
+          const date = new Date(order.date_created);
+          this.chartData.push({ date, paid_amount: order.paid_amount });
+        });
+        this.filteredChartData = [...this.chartData];
+        this.updateChart();
+      },
+      (error) => {
+        console.error('Error al obtener pedidos:', error);
+      }
+    );
+  }
 
-constructor() {
+  // La función applyFilter ahora usa el formulario para obtener las fechas
+  applyFilter() {
+    const { start, end } = this.dateRangeForm.value;
+    if (start && end) {
+      this.filteredChartData = this.chartData.filter(data => data.date >= start && data.date <= end);
+      this.updateChart();
+    }
+  }
+  // Actualizar el gráfico con los datos filtrados
+  updateChart() {
+    console.log(this.chartData);
+    console.log('filtered',this.filteredChartData);
+    
+    
     this.options = {
-      title: {
-        text: "Apple's Revenue by Product Category",
-      },
-      subtitle: {
-        text: "In Billion U.S. Dollars",
-      },
-      data: this.getData(),
+      ...this.options, // Mantenemos las opciones existentes
+      data: this.filteredChartData,
       series: [
         {
-          type: "bar",
-          xKey: "quarter",
-          yKey: "iphone",
-          yName: "iPhone",
-        },
-        {
-          type: "bar",
-          xKey: "quarter",
-          yKey: "mac",
-          yName: "Mac",
-        },
-        {
-          type: "bar",
-          xKey: "quarter",
-          yKey: "ipad",
-          yName: "iPad",
-        },
-        {
-          type: "bar",
-          xKey: "quarter",
-          yKey: "wearables",
-          yName: "Wearables",
-        },
-        {
-          type: "bar",
-          xKey: "quarter",
-          yKey: "services",
-          yName: "Services",
+          type: 'bar',
+          xKey: 'date',
+          yKey: 'paid_amount',
+          yName: 'Paid Amount',
         },
       ],
     };
   }
 }
+

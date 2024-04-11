@@ -10,6 +10,12 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { DatePipe } from '@angular/common';
 import { AgChartsAngularModule } from 'ag-charts-angular';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { VentasBarsComponent } from './ventas-bars/ventas-bars.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field'; // Importa el módulo del Form Field
+import { MatDatepickerModule } from '@angular/material/datepicker'; // Importa el módulo del DatePicker
+import { MatMomentDateModule } from '@angular/material-moment-adapter'; // Importa MatMomentDateModule para fechas con Moment.js
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,6 +23,7 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     DashboardComponent,
     NavBarComponent,
     BarChartComponent,
+    VentasBarsComponent,
   ],
   imports: [
     BrowserModule,
@@ -24,6 +31,14 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     HttpClientModule,
     AgGridModule,
     AgChartsAngularModule,
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatMomentDateModule,
+    FormsModule,
+    ReactiveFormsModule,
+    
+    
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
