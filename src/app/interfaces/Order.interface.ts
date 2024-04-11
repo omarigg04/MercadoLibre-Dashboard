@@ -4,6 +4,7 @@ import { Payment } from "./Payment.interface";
 import { Seller } from "./Seller.interface";
 
 export interface Order {
+    listCost: number;
     payments: Payment[];
     fulfilled: boolean;
     taxes: {
