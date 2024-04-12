@@ -37,16 +37,18 @@
       </div>
       </div>
       <div class="summary-box">
-        <h3>Other Sum 2</h3>
-        <p></p>
+        <mat-spinner *ngIf="satSumIsLoading" diameter="45"></mat-spinner>
+        <div *ngIf="!satSumIsLoading">
+        <h3>SAT</h3>
+        <p>{{ satSum | currency:'MXN'}}</p>
+      </div>
       </div>
       <div class="summary-box">
-        <h3>Other Sum 2</h3>
-        <p></p>
+        <mat-spinner *ngIf="realSumIsLoading" diameter="45"></mat-spinner>
+        <div *ngIf="!realSumIsLoading">
+        <h3>Real Sum</h3>
+        <p>{{ realSum | currency:'MXN'}}</p>
       </div>
-      <div class="summary-box">
-        <h3>Other Sum 2</h3>
-        <p></p>
       </div>
     </div>
   </mat-card-content>

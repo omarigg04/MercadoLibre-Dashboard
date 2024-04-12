@@ -16,10 +16,15 @@ export class BarChartComponent implements OnInit {
   totalSumIsLoading: boolean = true;
   enviosIsLoading: boolean = true;
   feesIsLoading: boolean = true;
+  satSumIsLoading: boolean = true;
+  realSumIsLoading: boolean = true;
+
 
   public totalSum: number = 0;
   public envios: number = 0;
   public fees: number = 0;
+  public satSum: number = 0;
+  public realSum: number = 0;
   public options: any = {};
   public chartData: any[] = [];
   public filteredChartData: any[] = [];
@@ -33,82 +38,46 @@ export class BarChartComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.http.get<Order[]>('http://localhost:3000/api/orders').subscribe(
-      (response: Order[]) => {
-        console.log('Órdenes recibidas:', response);
-        const fulfilledOrders = response.filter((order) => order.fulfilled);
+ngOnInit(): void {
+  this.http.get<Order[]>('http://localhost:3000/api/orders').pipe(
+    map(orders => orders.filter(order => order.fulfilled)), // Filtra las órdenes cumplidas
+    mergeMap(fulfilledOrders => {
+      this.chartData = fulfilledOrders.map(order => {
+        const date = new Date(order.date_created);
+        const saleFee = order.order_items.reduce((sum, item) => sum + item.sale_fee, 0); // Suma los sale_fee de los ítems de cada orden
 
-        fulfilledOrders.forEach((order) => {
-          const date = new Date(order.date_created);
-          let orderSaleFee = 0;  // Inicializa la suma de sale_fee para la orden
-  
-          // Sumar todos los sale_fee de los ítems de cada orden
-          order.order_items.forEach(item => {
-            orderSaleFee += item.sale_fee;
-          });
-  
-          // Agrega los datos necesarios para el gráfico
-          this.chartData.push({ 
-            date, 
-            total_amount: order.total_amount,
-            sale_fee: orderSaleFee  // Guarda la suma de sale_fee para la orden
-          });
-        });
+        return { date, total_amount: order.total_amount, saleFee };
+      });
 
-        this.http
-          .get<Order[]>('http://localhost:3000/api/orders')
-          .pipe(
-            mergeMap((orders) => {
-              const fulfilledOrders = orders.filter((order) => order.fulfilled);
-              const shipmentCostRequests = fulfilledOrders.map((order) =>
-                this.http
-                  .get<{ listCost: number }>(
-                    `http://localhost:3000/api/shipments/${order.shipping.id}`
-                  )
-                  .pipe(
-                    tap((response) =>
-                      console.log(
-                        `Costo de envío para order ${order.id}:`,
-                        response.listCost
-                      )
-                    ),
-                    catchError((error) => {
-                      console.error('Failed to fetch shipping info', error);
-                      return of({ listCost: 0 });
-                    })
-                  )
-              );
-              return forkJoin(shipmentCostRequests).pipe(
-                map((listCosts: { listCost: any }[]) =>
-                  fulfilledOrders.map((order, index) => ({
-                    ...order,
-                    listCost: listCosts[index].listCost,
-                  }))
-                )
-              );
-            })
-          )
-          .subscribe((ordersWithShippingCost) => {
-            this.ordersWithShippingCost = ordersWithShippingCost; // Actualizar la propiedad aquí
-            this.envios = ordersWithShippingCost.reduce(
-              (acc, curr) => acc + curr.listCost,
-              0
-            );
-            this.enviosIsLoading = false;
+      // Obtener los costos de envío de todas las órdenes cumplidas
+      const shipmentCostRequests = fulfilledOrders.map(order =>
+        this.http.get<{ listCost: number }>(`http://localhost:3000/api/shipments/${order.shipping.id}`).pipe(
+          catchError(() => of({ listCost: 0 })) // Manejo de error para costos de envío, asumiendo 0 si hay error
+        )
+      );
 
-            this.updateChart(); // Asegúrate de actualizar el gráfico inicialmente aquí
-          });
+      return forkJoin(shipmentCostRequests).pipe(
+        map(listCosts => {
+          return fulfilledOrders.map((order, index) => ({
+            ...order,
+            listCost: listCosts[index].listCost
+          }));
+        })
+      );
+    })
+  ).subscribe(ordersWithShippingCost => {
+    this.ordersWithShippingCost = ordersWithShippingCost;
+    this.envios = ordersWithShippingCost.reduce((acc, order) => acc + order.listCost, 0);
+    this.filteredChartData = this.chartData; // Asegúrate de que los datos filtrados inicialmente sean todo el conjunto de datos
+    this.updateChart();
+    this.isLoading = false;
+    this.enviosIsLoading = false;
+  }, error => {
+    console.error('Error al obtener pedidos:', error);
+    this.isLoading = false;
+  });
+}
 
-        this.filteredChartData = [...this.chartData];
-        this.updateChart();
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error al obtener pedidos:', error);
-      }
-    );
-  }
 
   applyFilter() {
     const { start, end } = this.dateRangeForm.value;
@@ -161,43 +130,49 @@ export class BarChartComponent implements OnInit {
   // Actualizar el gráfico con los datos filtrados
 // Modificamos updateChart para aceptar las órdenes filtradas como un parámetro
 updateChart(filteredOrders: Order[] = this.ordersWithShippingCost) {
-  this.totalSum = this.filteredChartData.reduce(
-    (acc, curr) => acc + curr.total_amount,
-    0
-  );
+  this.totalSum = filteredOrders.reduce((acc, curr) => acc + curr.total_amount, 0);
+  this.fees = filteredOrders.reduce((acc, curr) => acc + curr.order_items.reduce((sum, item) => sum + item.sale_fee, 0), 0);
+  this.envios = filteredOrders.reduce((acc, curr) => acc + curr.listCost, 0);
 
-  this.fees = filteredOrders.reduce(
-    (acc, curr) => acc + curr.order_items.reduce((sum, item) => sum + item.sale_fee, 0),
-    0
-  );
+    // Calcula satSum como el 9% del totalSum
+    this.satSum = this.totalSum * 0.08;
 
-  this.envios = filteredOrders.reduce(
-    (acc, curr) => acc + (curr.listCost ?? 0),
-    0
-  );
-
-  // Verificar si todos los datos han sido procesados antes de ocultar los spinners
-  if (filteredOrders.length > 0) {
-    this.feesIsLoading = false;
-    this.enviosIsLoading = false;
-  }
+    // Calcula realSum como totalSum menos satSum
+    this.realSum = this.totalSum - (this.satSum + this.envios + this.fees);
 
   this.totalSumIsLoading = false;
+  this.feesIsLoading = false;
+  this.enviosIsLoading = false;
+  this.satSumIsLoading = false;
+  this.realSumIsLoading = false;
+  // Actualizar los datos del gráfico para reflejar cualquier filtrado
+  this.filteredChartData = this.chartData.filter(data => filteredOrders.some(order => new Date(order.date_created).getTime() === data.date.getTime()));
 
   // Configuración del gráfico
   this.options = {
-    ...this.options, // Mantenemos las opciones existentes
-    data: this.filteredChartData,
+    data: this.filteredChartData.map(data => ({
+      date: this.datePipe.transform(data.date, 'shortDate'),
+      total_amount: data.total_amount,
+      sale_fee: data.sale_fee
+    })),
     series: [
       {
         type: 'bar',
         xKey: 'date',
         yKey: 'total_amount',
-        yName: 'Paid Amount',
+        yName: 'Total Amount'
       },
+      // {
+      //   type: 'bar',
+      //   xKey: 'date',
+      //   yKey: 'sale_fee',
+      //   yName: 'Sale Fee'
+      // }
     ],
+    // Añade aquí más configuraciones si necesitas
   };
 }
+
 
 
 }
