@@ -43,7 +43,7 @@
         <p>{{ satSum | currency:'MXN'}}</p>
       </div>
       </div>
-      <div class="summary-box">
+      <div class="summary-box realTotal">
         <mat-spinner *ngIf="realSumIsLoading" diameter="45"></mat-spinner>
         <div *ngIf="!realSumIsLoading">
         <h3>Real Sum</h3>

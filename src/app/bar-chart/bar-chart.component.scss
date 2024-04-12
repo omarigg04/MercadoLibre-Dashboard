@@ -47,7 +47,13 @@ button {
   padding: 0.5rem 1rem; /* Ajuste de padding para estética y alineación */
   flex: 1; /* Crecimiento flexible para ocupar el espacio disponible */
   min-width: 150px; /* Asegura un ancho mínimo */
+  mat-spinner{
+    margin: 0;
+  }
+
 }
+
+
 
 @media (max-width: 768px) {
   .summary-box {
@@ -85,7 +91,8 @@ mat-card-content.summary {
   align-items: center; /* Centra el contenido verticalmente */
 }
 
-.spinner {
-  position: absolute; /* Posicionamiento absoluto para el spinner */
-
+.summary-box[_ngcontent-ng-c686892858]   mat-spinner[_ngcontent-ng-c686892858] {
+  margin: 0;
+  left: 40%;
 }
+
