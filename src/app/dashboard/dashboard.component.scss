@@ -1,7 +1,35 @@
-.main-box{
-    height: 800px; 
-    width: 100%; 
-    display:flex;  
-    align-items: center;
-    justify-content: center;
+.main-box {
+    position: relative; /* Asegura que el posicionamiento absoluto del spinner sea relativo a este contenedor */
+    height: 800px;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centra el contenedor del grid horizontalmente */
+    align-items: center; /* Centra el contenedor del grid verticalmente */
+}
+
+.spinner {
+    position: absolute; /* Posicionamiento absoluto para el spinner */
+    top: 50%; /* Centrado vertical */
+    left: 50%; /* Centrado horizontal */
+    transform: translate(-50%, -50%); /* Ajusta la posición exacta del centro del spinner */
+    z-index: 100;
+}
+
+.ag-grid-angular {
+    width: 85%; /* Ajuste del ancho del grid */
+    height: 720px; /* Ajuste de la altura del grid */
+}
+
+
+// ::ng-deep .ag-overlay-loading-center span {
+//     display: none;
+// }
+
+::ng-deep .ag-overlay-loading-center {
+    display: none;
+    border: var(--ag-borders) var(--ag-border-color);
+    background: var(--ag-background-color);
+    border-radius: var(--ag-card-radius);
+    box-shadow: var(--ag-card-shadow);
+    padding: var(--ag-grid-size);
 }

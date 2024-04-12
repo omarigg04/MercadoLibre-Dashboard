@@ -1,0 +1,15 @@
+
+.navbar {
+    font-size: 1.5rem;
+    font-weight: 500;
+    height: 4rem;
+    background-color: #333; /* Dark background for navbar */
+    // color: #b02020;
+  }
+  .navbar-brand, .nav-link {
+    color: #000000; /* White text for better contrast */
+  }
+
+  .navbar-brand:hover, .nav-link:hover {
+    color: #00bfff; /* Light blue text on hover */
+  }

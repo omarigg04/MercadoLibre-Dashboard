@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   columnDefs: any[] = [];
   rowData: any[] = [];
   gridOptions: any;
+  isLoading: boolean = true;
 
 
   onGridReady(params: any) {
@@ -104,6 +105,7 @@ export class DashboardComponent implements OnInit {
           item: order.order_items[0].item.title,
           sat_fee: order.total_amount * 0.01 + order.total_amount * 0.08
         }));
+        this.isLoading = false;
         console.log(fulfilledOrders); // Esto imprimirá todas las órdenes cumplidas en la consola
       },
       (error) => {
