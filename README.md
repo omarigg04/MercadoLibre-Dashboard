@@ -1,4 +1,6 @@
-# MlDash
+# Mercado Libre Dashboard
+
+![dash1](https://github.com/omarigg04/MercadoLibre-Dashboard/assets/66231336/ebcd5ff0-090a-4848-9858-d796380e6799)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
 
