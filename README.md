@@ -2,6 +2,12 @@
 
 ![dash1](https://github.com/omarigg04/MercadoLibre-Dashboard/assets/66231336/ebcd5ff0-090a-4848-9858-d796380e6799)
 
+You can select specific range of time to visualize data on chart and the sum for rawTotal, shippingTotal, feesTotal, SATtotal and realTotal
+realTotal = rawTotal - (shippingTotal + feesTotal + SatTotal)
+
+![dash1](https://github.com/omarigg04/MercadoLibre-Dashboard/assets/66231336/877c98dc-c6dc-4472-9622-1077b8ed7cfb)
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
 ## Install dependencies
 
