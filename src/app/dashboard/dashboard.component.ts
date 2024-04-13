@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Order[]>('http://localhost:3000/api/orders').subscribe(
+    this.http.get<Order[]>('http://omargaxiola.com:3000/api/orders').subscribe(
       (response: Order[]) => {
         // Primero, filtramos los pedidos para quedarnos solo con aquellos cumplidos
         const fulfilledOrders = response.filter(order => order.fulfilled);
