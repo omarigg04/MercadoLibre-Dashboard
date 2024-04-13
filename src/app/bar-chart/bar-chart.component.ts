@@ -5,6 +5,7 @@ import { Order } from '../interfaces/Order.interface';
 import { DatePipe } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, tap, } from 'rxjs/operators';
+import { environment } from '../../environments/environment'; 
 
 @Component({
   selector: 'app-bar-chart',
@@ -39,7 +40,7 @@ export class BarChartComponent implements OnInit {
   }
 
 ngOnInit(): void {
-  this.http.get<Order[]>('http://omargaxiola.com:3000/api/orders').pipe(
+  this.http.get<Order[]>(`${environment.apiUrl}/api/orders`).pipe(
     map(orders => orders.filter(order => order.fulfilled)), // Filtra las órdenes cumplidas
     mergeMap(fulfilledOrders => {
       this.chartData = fulfilledOrders.map(order => {
@@ -51,7 +52,7 @@ ngOnInit(): void {
 
       // Obtener los costos de envío de todas las órdenes cumplidas
       const shipmentCostRequests = fulfilledOrders.map(order =>
-        this.http.get<{ listCost: number }>(`http://omargaxiola.com:3000/api/shipments/${order.shipping.id}`).pipe(
+        this.http.get<{ listCost: number }>(`${environment.apiUrl}/api/shipments/${order.shipping.id}`).pipe(
           catchError(() => of({ listCost: 0 })) // Manejo de error para costos de envío, asumiendo 0 si hay error
         )
       );
