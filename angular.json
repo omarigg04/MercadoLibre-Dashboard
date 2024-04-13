@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ml-dash:build:production"
+              "buildTarget": "ml-dash:build:production"
             },
             "development": {
-              "browserTarget": "ml-dash:build:development"
+              "buildTarget": "ml-dash:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ml-dash:build"
+            "buildTarget": "ml-dash:build"
           }
         },
         "test": {
