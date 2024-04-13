@@ -5,6 +5,7 @@ import { Order } from '../interfaces/Order.interface';
 import { DatePipe } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, tap, } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-bar-chart',
@@ -31,7 +32,7 @@ export class BarChartComponent implements OnInit {
   public ordersWithShippingCost: Order[] = []; // Asegúrate de que se actualice correctamente
   dateRangeForm: FormGroup;
 
-  constructor(private http: HttpClient, private datePipe: DatePipe) {
+  constructor(private http: HttpClient, private datePipe: DatePipe, private authService: AuthService) {
     this.dateRangeForm = new FormGroup({
       start: new FormControl(),
       end: new FormControl(),
@@ -172,6 +173,54 @@ updateChart(filteredOrders: Order[] = this.ordersWithShippingCost) {
     // Añade aquí más configuraciones si necesitas
   };
 }
+
+
+
+
+fetchSimpleResponse() {
+  this.http.get('http://localhost:3000/api/test',{ responseType: 'text' }).subscribe({
+    next: (response) => {
+      console.log('Respuesta recibida del backend:', response);
+      alert('Respuesta del backend: ' + response);
+    },
+    error: (error) => {
+      console.error('Error al realizar la solicitud al backend:', error);
+    }
+  });
+}
+
+handleAuthRedirect() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code'); // Este es el código TG que MercadoLibre envía como parámetro de URL
+
+  if (code) {
+    // Enviar este código al backend para que pueda intercambiarlo por un token de acceso
+    this.authService.exchangeCodeForToken(code).subscribe({
+      next: (response) => {
+        // Maneja la respuesta, que incluirá el token de acceso
+      },
+      error: (error) => {
+        // Maneja el error
+      }
+    });
+  }
+}
+
+
+
+obtainTGCode() {
+  this.authService.getTGCode().subscribe({
+    next: (url) => {
+      console.log('URL obtenida:', url);
+      // Manejar el URL como sea necesario, por ejemplo, abrirlo en una nueva pestaña del navegador
+      window.open(url, '_blank');
+    },
+    error: (err) => {
+      console.error('Error al obtener el URL:', err);
+    }
+  });
+}
+
 
 
 
