@@ -3,17 +3,21 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-angular": "^17.3.4",
     "@angular/animations": "^17.3.4",
     "@angular/cdk": "^17.3.4",
+    "@angular/cli": "~17.3.4",
     "@angular/common": "^17.3.4",
     "@angular/compiler": "^17.3.4",
+    "@angular/compiler-cli": "^17.3.4",
     "@angular/core": "^17.3.4",
     "@angular/forms": "^17.3.4",
     "@angular/material": "^17.3.4",
@@ -25,9 +29,12 @@
     "ag-charts-community": "^9.2.0",
     "ag-grid-angular": "^31.2.0",
     "ag-grid-community": "^31.2.0",
+    "express": "^4.19.2",
     "mkcert": "^3.2.0",
+    "path": "^0.12.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "typescript": "~5.4.5",
     "zone.js": "~0.14.4"
   },
   "devDependencies": {
