@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:3000'
+    production: true,
+    apiUrl: 'https://ml-dash-b275b0675d68.herokuapp.com'
   };
   
