@@ -77,13 +77,7 @@ app.get('/api/shipments/:shipmentId', async (req, res) => {
 });
 
 
-// Servir archivos estáticos de Angular
-app.use(express.static(path.join(__dirname, 'dist/ml-dash')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/ml-dash/index.html'));
-});
-
-// Iniciar servidor
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
