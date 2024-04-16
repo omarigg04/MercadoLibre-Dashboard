@@ -28,6 +28,7 @@
     "ag-charts-community": "^9.2.0",
     "ag-grid-angular": "^31.2.0",
     "ag-grid-community": "^31.2.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mkcert": "^3.2.0",
     "path": "^0.12.7",
