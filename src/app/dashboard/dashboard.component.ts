@@ -4,6 +4,8 @@ import { GridOptions, RowModelType } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { Order } from '../interfaces/Order.interface';
 import { ValueFormatterParams } from 'ag-grid-community';
+import { environment } from '../../environments/environment'; 
+
 
 
 
@@ -90,7 +92,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Order[]>('http://omargaxiola.com:3000/api/orders').subscribe(
+    this.http.get<Order[]>(`${environment.apiUrl}/api/orders`).subscribe(
       (response: Order[]) => {
         // Primero, filtramos los pedidos para quedarnos solo con aquellos cumplidos
         const fulfilledOrders = response.filter(order => order.fulfilled);
